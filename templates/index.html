@@ -1,0 +1,158 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Home</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/index.css') }}">
+	<link href="//fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;1,600&display=swap"
+		rel="stylesheet">
+</head>
+
+<body>
+	<!-- header section-->
+	<header class="fixed-top w3l-header" id="header_div">
+		<nav class="fill px-lg-0 py-0 px-3 navbar navbar-expand-lg navbar-light ">
+			<div class="container">
+				<h1><a class="navbar-brand" href="/movies"><span class="fa fa-camera icon-log"
+							aria-hidden="true"></span>
+							Popcorn Horizon </a></h1>
+				<div class="collapse navbar-collapse" id="navbar_content">
+					<ul class="navbar-nav ml-auto">
+						<li class="nav-item active">
+							<a class="nav-link" href="/movies">Home</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="/contact_us">Contact</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</header>
+	<div class="w3l-breadcrumbs">
+		<nav id="breadcrumbs" class="breadcrumbs">
+			<div class="container page-wrapper">
+
+			</div>
+		</nav>
+	</div>
+
+	<!-- This section displays the movie details along with their price and duration-->
+	<section class="w3l-grids">
+		<div class="py-5 grids-main">
+			<div class="py-lg-4 container">
+				<div class="headerhny-title">
+					<div class="w3l-title-grids">
+						<div class="headerhny-left">
+							<h3 class="hny-title">Now Showing</h3>
+						</div>
+					</div>
+				</div>
+				<!-- This block of code loads the movies by iterating the database contents -->
+				<div class="w3l-populohny-grids">
+					{% for movie in movies %}
+					<div class="vhny-grid item">
+						<div class="box16 mb-0">
+							<figure>
+								<img class="img-fluid" src="{{movie.img}}" alt="">
+							</figure>
+
+							<a href=".{{movie.tag_name}}" data-toggle="modal">
+								<div class="box-content">
+									<h3 class="title">{{movie.title}}</h3>
+									<h4> <span class="post"><span class="fa fa-clock-o"> </span> {{movie.duration}}</span>
+										<span class="post text-right">${{movie.price}}</span>
+									</h4>
+								</div>
+							</a>
+							<div class="modal fade {{movie.tag_name}}" id="myModal" tabindex="-1" role="dialog"
+								aria-hidden="true">
+								<div class="modal-dialog" role="document">
+									<div class="modal-content" id="movie_details">
+										<div class="modal-header">
+											<h4 class="modal-title" id="movie_detail_title">DETAILS</h4>
+											<button type="button" class="closebtn" data-dismiss="modal"
+												aria-label="Close">
+												<span aria-hidden="true">&times;</span>
+											</button>
+										</div>
+										<div class="modal-body" id="dynamic-content">
+											<img src="{{movie.img}}" class="img-fluid modalimg" alt="" />
+											<p>
+											<h3>Released Date: {{movie.release_date}}</h3>
+											<h3>IMDB: NA </h3>
+											</p>
+											<h4>About Movie</h4>
+											<p>
+												{{movie.about}}
+											</p>
+											<h4>Actors List</h4>
+											<p>
+												{{movie.cast}}
+											</p>
+										</div>
+										<div class="bookbtn">
+											<form action="/book_ticket" method="post">
+												<input id="movie_id" name="movie_id" type="hidden" value="{{movie.id}}"/>
+												<button type="submit" class="btn btn-success">Book</button>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+
+	</section>
+	<footer class="w3l-footer">
+		<section class="footer-inner-main">
+			<div class="below-section">
+				<div class="container">
+					<div class="copyright-footer">
+						<div class="columns text-lg-left">
+							<p>&copy; 2024 Popcorn horizon. All rights reserved</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</footer>
+</body>
+</html>
+<script src="/static/assets/js/owl.carousel.js"></script>
+<script src="/static/assets/js/jquery-3.3.1.min.js"></script>
+<script src="/static/assets/js/theme-change.js"></script>
+
+
+<script>
+	$(window).on("scroll", function () {
+		var scrollSize = $(window).scrollTop();
+
+		if (scrollSize >= 80) {
+			$("#header_div").addClass("nav-fixed");
+		} else {
+			$("#header_div").removeClass("nav-fixed");
+		}
+	});
+	$(".navbar-toggler").on("click", function () {
+		$("header").toggleClass("active");
+	});
+	$(document).on("ready", function () {
+		if ($(window).width() > 950) {
+			$("header").removeClass("active");
+		}
+		$(window).on("resize", function () {
+			if ($(window).width() > 950) {
+				$("header").removeClass("active");
+			}
+		});
+	});
+</script>
+<script src="/static/assets/js/bootstrap.min.js"></script>
+<script src="/static/assets/js/easyResponsiveTabs.js"></script>

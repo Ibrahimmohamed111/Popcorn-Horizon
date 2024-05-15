@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/contact.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/index.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/as-alert-message.min.css') }}">
+
+</head>
+<body>
+  <!--header section -->
+  <header id="header_div" class="w3l-header fixed-top">
+    <nav class="px-lg-0 py-0 px-3 navbar navbar-light navbar-expand-lg fill ">
+      <div class="container">
+     	<h1><a class="navbar-brand" href="/movies"><span class="fa fa-camera icon-log"
+							aria-hidden="true"></span>
+							Popcorn Horizon </a></h1>
+
+				<div class="collapse navbar-collapse" id="navbar_content">
+					<ul class="navbar-nav ml-auto">
+						<li class="nav-item active">
+							<a class="nav-link" href="/movies">Home</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="/contact_us">Contact</a>
+						</li>
+					</ul>
+				</div>
+
+      </div>
+    </nav>
+  </header>
+
+ <div class="container">
+
+    <h3>Post your feedback</h3>
+    <p>Please fill out the form to share your experience with us.</p>
+   <h4>{{message}}</h4>
+    <form name="contact-us-form" method="post" action="/save_feedback">
+      <div class="row100" id="name_div">
+        <div class="col">
+          <div class="inputBox" id="fname_div">
+            <input type="text" name="fname" onclick="performAnim('fname')"/>
+            <span class="text">Enter First Name</span>
+            <span class="line" id="fname_span"></span>
+          </div>
+        </div>
+        <div class="col">
+          <div class="inputBox" id="lname_div">
+            <input type="text" name="lname" onclick="performAnim('lname')"/>
+            <span class="text">Enter Last Name</span>
+            <span class="line" id="lname_span"></span>
+          </div>
+        </div>
+      </div>
+      <div class="row100" id="email_div">
+        <div class="col">
+          <div class="inputBox" id="email-inputBox">
+            <input type="email" name="email" pattern="[^ @]*@[^ @]*" onclick="performAnim('email')"/>
+            <span class="text">Enter Email ID</span>
+            <span class="line" id="email_span"></span>
+          </div>
+        </div>
+        <div class="col">
+          <div class="inputBox" id="mobile_div">
+            <input type="tel" name="phone" onclick="performAnim('tel')" />
+            <span class="text">Enter Mobile Number</span>
+            <span class="line" id="phone_span"></span>
+          </div>
+        </div>
+      </div>
+      <div class="row100">
+        <div class="col">
+          <div class="inputBox textarea">
+            <textarea name="feedback"></textarea>
+            <span class="text">Your feedback here...</span>
+            <span class="line"></span>
+          </div>
+        </div>
+      </div>
+      <div class="row100">
+        <div class="col">
+          <div class="submitbutton">
+            <button class="btn submitbtn" type="submit">Post</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <script type="text/javascript" src="assets/js/contact-us.js"></script>
+  <script type="text/javascript" src="assets/js/as-alert-message.min.js"></script>
+  <script src="assets/js/bootstrap.min.js"></script>
+  <script src="assets/js/jquery-3.3.1.min.js"></script>
+  <script src="assets/js/theme-change.js"></script>
+</body>
+</html>

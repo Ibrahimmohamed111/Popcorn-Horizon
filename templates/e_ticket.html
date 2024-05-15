@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Book Ticket</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/confirm_ticket.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/payment_window.css') }}" />
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/index.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/progress.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/book_ticket.css') }}">
+  <link rel="stylesheet" href="https://npmcdn.com/flickity@2/dist/flickity.css">
+
+<link href="https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:400,700" rel="stylesheet">
+</head>
+
+<body>
+<center><h2>Download E-Ticket</h2></center>
+              <div id="ticket_div" class="ticket-body">
+                <div class="ticket">
+                  <div class="holes-top"></div>
+                  <div class="title">
+                    <center><p class="cinema">Popcorn Horizon</p></center>
+
+                  </div>
+                  <div class="poster">
+                    <center><img src="{% if session['movie_img'] %} {{session['movie_img']}} {%endif%}"
+								 alt="Movie: {% if session['movie_name'] %} {{session['movie_name']}} {%endif%}" /> </center>
+                  </div>
+                  <div class="info">
+                    <table class="info-table ticket-table">
+                      <tr>
+                        <th>SCREEN</th>
+                        <th>SEAT IDS</th>
+                      </tr>
+                      <tr>
+                        <td class="bigger">{% if session['screen_id'] %} {{session['screen_id']}} {%endif%}</td>
+                        <td class="bigger">{% if session['selected_seats1'] %} {{session['selected_seats1']}} {%endif%}</td>
+                      </tr>
+                    </table>
+                    <table class="info-table ticket-table">
+                      <tr>
+                        <th>PRICE</th>
+                        <th>DATE</th>
+                        <th>TIME</th>
+                      </tr>
+                      <tr>
+                        <td>{% if session['total_price'] %} {{session['total_price']}} {%endif%}</td>
+                        <td>{% if session['movie_date'] %} {{session['movie_date']}} {%endif%}</td>
+                        <td>{{session['time_slot']}} </td>
+                      </tr>
+                    </table>
+                  </div>
+                  <div class="holes-lower"></div>
+                  <div class="serial">
+					  <img src="/static/assets/images/ticket_bar_code.jpeg" style="width:300px; height:120px;" alt="" />
+                  </div>
+                </div>
+              </div>
+</body>
+<script type="text/javascript" src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="/static/assets/js/theme-change.js"></script>
+<script src="https://npmcdn.com/flickity@2/dist/flickity.pkgd.js"></script>
+<script type="text/javascript" src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js'>
+</script>
+<script type="text/javascript" src="/static/assets/js/ticket-booking.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script>
+
+</html>

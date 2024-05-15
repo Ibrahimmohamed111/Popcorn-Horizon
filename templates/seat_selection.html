@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Seat Selection</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="keywords"
+		content="" />
+	<link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" type="text/css" media="all" />
+	<script src="/static/js/jquery-1.11.0.min.js"></script>
+	<script src="/static/js/jquery.seat-charts.js"></script>
+</head>
+
+<body>
+<div class="content">
+	<h2>Seat Booking</h2>
+	<div class="main">
+		<div class="demo">
+			<div id="seat-map">
+				<div class="front">SCREEN</div>
+			</div>
+			<div id="booking_details" class="booking-details">
+				<ul class="book-left">
+					<li>MovieName:</li>
+					<li>TimeSlot:</li>
+					<li>NumTickets:</li>
+					<li>TotalPrice:</li>
+					<li>Seats:</li>
+				</ul>
+				<ul class="book-right">
+					<li>: {{session['movie_name']}}</li>
+					<li>: {{session['sel_month']}} {{session['sel_day_id']}}, {{session['time_slot']}}</li>
+					<li>: <span id="counter">0</span></li>
+					<li>: <b><i>$</i><span id="total">0</span></b></li>
+				</ul>
+				<div class="clear"></div>
+				<ul id="selected-seats" class="scrollbar scrollbar1"></ul>
+
+
+				<div id="legend"></div>
+			</div>
+
+			<script type="text/javascript">
+				var price = getPrice(); //price
+				$(document).ready(function ()
+				{
+				    console.log ("Loading the seat selection............");
+					var $cart = $('#selected-seats'),
+						$counter = $('#counter'),
+						$total = $('#total');
+
+					var sc = $('#seat-map').seatCharts({
+						map: [
+							'aaaaaaaaaa',
+							'aaaaa_aaaa',
+							'aaaaa_aaaa',
+							'aaaaa_aaaa',
+							'aaaaa_aaaa',
+							'aaaaa_aaaa',
+							'aaaaa_aaaa',
+							'aaaaa_aaaa',
+							'aaaaa_aaaa',
+							'aaaaa_aaaa'
+						],
+						naming: {
+							top: false,
+							getLabel: function (character, row, column) {
+								return column;
+							}
+						},
+						legend: {
+							node: $('#legend'),
+							items: [
+								['a', 'available', 'Available'],
+								['a', 'unavailable', 'Sold'],
+								['a', 'selected', 'Selected']
+							]
+						},
+						click: function () {
+							if (this.status() == 'available') { //optional seat
+								$('<li>R-' + (this.settings.row + 1) + '	S-' + this.settings.label + '</li>')
+									.attr('id', 'cart-item-' + this.settings.id)
+									.data('seatId', this.settings.id)
+									.appendTo($cart);
+								console.log("Seat id:" +this.settings.id);
+								console.log("Row id:" + (this.settings.row+1));
+								console.log("Col id:" + (this.settings.label));
+								$counter.text(sc.find('selected').length + 1);
+								$total.text(calculatePrice(sc) + price);
+							var seat_id = this.settings.id;
+							$.ajax({
+								url: '/add_seat',
+								type: 'POST',
+								contentType: 'application/json',
+								data: JSON.stringify({ 'seat_id': seat_id }),
+								success: function(response) {
+								},
+								error: function(error) {
+									console.log(error);
+								}
+							});
+
+								selected_seats = sc.find('selected')['seatIds'];
+								for (let kl = 0; kl < selected_seats.length; kl++) {
+									console.log(sc.find('selected')['seatIds'][kl]);
+								}
+								console.log("-------------------");
+								console.log("select length:" + selected_seats.length);
+								console.log(sc.find('selected')['seatIds'][0]);
+
+								return 'selected';
+							} else if (this.status() == 'selected') {
+
+								$counter.text(sc.find('selected').length - 1);
+								$total.text(calculatePrice(sc) - price);
+								$('#cart-item-' + this.settings.id).remove();
+								var seat_id = this.settings.id;
+							$.ajax({
+								url: '/remove_seat',
+								type: 'POST',
+								contentType: 'application/json',
+								data: JSON.stringify({ 'seat_id': seat_id }),
+								success: function(response) {
+								},
+								error: function(error) {
+									console.log(error);
+								}
+							});
+								return 'available';
+							} else if (this.status() == 'unavailable') {
+								return 'unavailable';
+							} else {
+								return this.style();
+							}
+						}
+					});
+
+					var s_seats = get_selected_seats();
+					console.log(s_seats);
+					sc.get(s_seats).status('selected');
+					var a_seats = get_allocated_seats();
+					sc.get(a_seats).status('unavailable');
+					var selected_count = sc.find('selected')['seatIds'].length;
+					//document.getElementById("counter").value = selected_count;
+
+				});
+
+
+				function get_selected_seats() {
+                    $.ajaxSetup({async: false});
+						const selected_seats = [];
+					 $.ajax({
+								url: '/get_selected_seats',
+								type: 'POST',
+								contentType: 'application/json',
+
+								success: function(response) {
+
+									var seat_ids = response.split(",");
+									for (var ml=0; ml < seat_ids.length; ml++) {
+										let sid = seat_ids[ml];
+										var s_sid = sid;
+										console.log(sid);
+										selected_seats.push(sid);
+									}
+									console.log("Internal Returning from ajax:"+ selected_seats.length);
+
+								},
+								error: function(error) {
+									console.log(error);
+								}
+							});
+				console.log("Returning from ajax:"+ selected_seats.length);
+				$.ajaxSetup({async: true});
+
+				return selected_seats;
+				}
+
+				function get_allocated_seats() {
+                    $.ajaxSetup({async: false});
+						const selected_seats = [];
+					 $.ajax({
+								url: '/get_allocated_seats',
+								type: 'POST',
+								contentType: 'application/json',
+
+								success: function(response) {
+
+									var seat_ids = response.split(",");
+									for (var ml=0; ml < seat_ids.length; ml++) {
+										let sid = seat_ids[ml];
+										var s_sid = sid;
+										console.log(sid);
+										selected_seats.push(sid);
+									}
+									console.log("Internal Returning from ajax:"+ selected_seats.length);
+
+								},
+								error: function(error) {
+									console.log(error);
+								}
+							});
+				console.log("Returning from allocated ajax:"+ selected_seats.length);
+				$.ajaxSetup({async: true});
+
+				return selected_seats;
+				}
+
+				function calculatePrice(sc) {
+					var total_amount = 0;
+					sc.find('selected').each(function () {
+						total_amount += price;
+					});
+
+					return total_amount;
+				}
+
+
+				function getPrice() {
+                    $.ajaxSetup({async: false});
+						var price = 0.0;
+					 $.ajax({
+								url: '/get_price',
+								type: 'POST',
+								contentType: 'application/json',
+								success: function(response) {
+									price = parseFloat(response);
+								},
+								error: function(error) {
+									console.log(error);
+								}
+							});
+				$.ajaxSetup({async: true});
+
+				return price;
+				}
+
+			</script>
+		</div>
+	</div>
+	<script type="text/javascript" src="/static/js/theme-change-seat-sel.js"></script>
+	<script src="/static/js/jquery.nicescroll.js"></script>
+	<script src="/static/js/scripts.js"></script>
+</div>
+</body>
+</html>
